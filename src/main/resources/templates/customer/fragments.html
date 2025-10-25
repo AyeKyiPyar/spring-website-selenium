@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th = "http://www.thymeleaf.org">
+  <head th:fragment = "html_head">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping System</title>
+    <!-- add icon link -->
+    <link rel="icon" th:href="@{/Images/mobile-shopping.png}" type="image/x-icon" />
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Flowbite -->
+    <link href="https://cdn.jsdelivr.net/npm/flowbite@1.5.3/dist/flowbite.min.css" rel="stylesheet" />
+    
+     <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+	
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.js"></script>
+	 <link href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" rel="stylesheet"/>
+	 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+       /*  @media print {
+            .no-print {
+                display: none;
+            }
+        } */
+        
+       #invoice {
+  margin-top: 0;
+  padding: 0;
+} 
+    </style>
+  </head>
+	<body class="bg-gray-100">
+        <!-- Header -->
+         <header th:fragment = "header" class='fixed top-0 left-0 w-full z-50 border-b bg-[#970747] font-sans min-h-[60px] px-10 py-3'>
+            <div class='flex flex-wrap items-center max-lg:gap-y-6 max-sm:gap-x-4'>
+              <a href="javascript:void(0)">
+                
+                <img th:src="@{/Images/logo.png}" alt="logo" class='w-9 h-9 hidden max-sm:block' />
+              </a> 
+             
+      		<div
+              class="bg-gray-100 border border-transparent focus-within:border-blue-500 focus-within:bg-transparent flex items-center px-4 rounded-full h-10 lg:w-2/4 mt-3 mx-auto max-lg:mt-6 transition-all">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192.904 192.904"
+                class="w-4 h-4 fill-gray-500 mr-3">
+                <path
+                  d="m190.707 180.101-47.078-47.077c11.702-14.072 18.752-32.142 18.752-51.831C162.381 36.423 125.959 0 81.191 0 36.422 0 0 36.423 0 81.193c0 44.767 36.422 81.187 81.191 81.187 19.688 0 37.759-7.049 51.831-18.751l47.079 47.078a7.474 7.474 0 0 0 5.303 2.197 7.498 7.498 0 0 0 5.303-12.803zM15 81.193C15 44.694 44.693 15 81.191 15c36.497 0 66.189 29.694 66.189 66.193 0 36.496-29.692 66.187-66.189 66.187C44.693 147.38 15 117.689 15 81.193z">
+                </path>
+              </svg>
+              <input type='email' placeholder='Search...'
+                class="w-full outline-none bg-transparent text-gray-600 font-semibold text-[15px] border-0" />
+            </div>
+            <div id="collapseMenu"
+                class="max-lg:hidden lg:!flex lg:items-center max-lg:before:fixed max-lg:before:bg-black max-lg:before:opacity-40 max-lg:before:inset-0 max-lg:before:z-50">
+                <button id="toggleClose" class='lg:hidden fixed top-2 right-4 z-[100] rounded-full bg-white w-9 h-9 flex items-center justify-center border'>
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 fill-black" viewBox="0 0 320.591 320.591">
+                    <path
+                      d="M30.391 318.583a30.37 30.37 0 0 1-21.56-7.288c-11.774-11.844-11.774-30.973 0-42.817L266.643 10.665c12.246-11.459 31.462-10.822 42.921 1.424 10.362 11.074 10.966 28.095 1.414 39.875L51.647 311.295a30.366 30.366 0 0 1-21.256 7.288z"
+                      data-original="#000000"></path>
+                    <path
+                      d="M287.9 318.583a30.37 30.37 0 0 1-21.257-8.806L8.83 51.963C-2.078 39.225-.595 20.055 12.143 9.146c11.369-9.736 28.136-9.736 39.504 0l259.331 257.813c12.243 11.462 12.876 30.679 1.414 42.922-.456.487-.927.958-1.414 1.414a30.368 30.368 0 0 1-23.078 7.288z"
+                      data-original="#000000"></path>
+                  </svg>
+                </button>
+      			
+                
+              </div>
+
+              <div class='flex items-center ml-auto space-x-8'>
+               
+                <a th:href="@{/customer/cart/view}">
+			        <span class="relative">
+			            <svg xmlns="http://www.w3.org/2000/svg" width="30px" height="30px"
+			              class="cursor-pointer fill-[#ffffff] hover:fill-[#9c27b0] inline-block" viewBox="0 0 512 512">
+			              <path
+			                d="M164.96 300.004h.024c.02 0 .04-.004.059-.004H437a15.003 15.003 0 0 0 14.422-10.879l60-210a15.003 15.003 0 0 0-2.445-13.152A15.006 15.006 0 0 0 497 60H130.367l-10.722-48.254A15.003 15.003 0 0 0 105 0H15C6.715 0 0 6.715 0 15s6.715 15 15 15h77.969c1.898 8.55 51.312 230.918 54.156 243.71C131.184 280.64 120 296.536 120 315c0 24.812 20.188 45 45 45h272c8.285 0 15-6.715 15-15s-6.715-15-15-15H165c-8.27 0-15-6.73-15-15 0-8.258 6.707-14.977 14.96-14.996zM477.114 90l-51.43 180H177.032l-40-180zM150 405c0 24.813 20.188 45 45 45s45-20.188 45-45-20.188-45-45-45-45 20.188-45 45zm45-15c8.27 0 15 6.73 15 15s-6.73 15-15 15-15-6.73-15-15 6.73-15 15-15zm167 15c0 24.813 20.188 45 45 45s45-20.188 45-45-20.188-45-45-45-45 20.188-45 45zm45-15c8.27 0 15 6.73 15 15s-6.73 15-15 15-15-6.73-15-15 6.73-15 15-15zm0 0"
+			                data-original="#000000"></path>
+			            </svg>
+			            <span class="absolute left-auto -ml-1 -top-1 rounded-full bg-red-500 px-1 py-0 text-xs text-white" th:text = "${session.carts != null? session.carts.size() : 0}"></span>
+			          </span>
+			          
+			      </a>
+                <div th:if = "${session.loginCustomer == null}">
+                <!-- Sign-In Icon -->
+			     <a th:href="@{/customer/login/form}" class="flex items-center text-white hover:text-purple-400">
+					  <!-- Account SVG Icon -->
+					  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+					    <circle cx="12" cy="8" r="4" />
+					    <path d="M12 14c-4.418 0-8 2.239-8 5v1h16v-1c0-2.761-3.582-5-8-5z"/>
+					  </svg>
+					  <span class="ml-2">Sign in</span>
+					  
+				</a>
+				</div>
+				<div th:unless = "${session.loginCustomer == null}">
+				<!-- Sign-Out Icon -->
+				<a th:href="@{/customer/signout}" class="flex items-center text-white hover:text-purple-400">
+					  <!-- Account SVG Icon -->
+					  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+					    <circle cx="12" cy="8" r="4" />
+					    <path d="M12 14c-4.418 0-8 2.239-8 5v1h16v-1c0-2.761-3.582-5-8-5z"/>
+					  </svg>
+					  <span class="ml-2">Sign out</span>
+					  
+				</a>
+				<!-- <span th:text = "${session.loginCustomer.name}"></span> -->
+               </div>
+              </div>
+            </div>
+      		<div>
+      			
+      		</div>
+            
+        </header>
+		<header th:fragment = "nav" class='fixed top-[70px] left-0 w-full z-50 border-b bg-[#970747] font-sans min-h-[40px] px-10 py-3'>
+			<ul class='lg:flex lg:gap-x-10 lg:absolute lg:left-1/2 lg:-translate-x-1/2 max-lg:space-y-3 max-lg:fixed max-lg:bg-white max-lg:w-2/3 max-lg:min-w-[200px] max-lg:top-0 max-lg:left-0 max-lg:px-10 max-lg:py-4 max-lg:h-full max-lg:shadow-md max-lg:overflow-auto z-50'>
+                  <li class='mb-6 hidden max-lg:block'>
+                    <a href="javascript:void(0)">
+                    	<img src="https://readymadeui.com/readymadeui.svg" alt="logo" class='w-36' />
+                    </a>
+                  </li>
+                  
+                  <li class='max-lg:border-b max-lg:py-3'>
+                  	<a th:href='@{/customer/index}' class="hover:text-red-400 text-white font-bold text-l lg:hover:fill-[#9c27b0] block focus:outline-none">Home</a>
+                  </li>
+                  <li class='group max-lg:border-b max-lg:py-3 relative'>
+		              <a href='javascript:void(0)'
+		                class="dropdown-menu hover:text-red-400 text-white font-bold text-l lg:hover:fill-[#9c27b0] block focus:outline-none">Category<svg
+		                  xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" class="ml-1 inline-block"
+		                  viewBox="0 0 24 24">
+		                  <path
+		                    d="M12 16a1 1 0 0 1-.71-.29l-6-6a1 1 0 0 1 1.42-1.42l5.29 5.3 5.29-5.29a1 1 0 0 1 1.41 1.41l-6 6a1 1 0 0 1-.7.29z"
+		                    data-name="16" data-original="#000000" />
+		                </svg>
+		              </a>
+		              <ul  th:field = "*{category}"
+		                class='absolute shadow-lg bg-white space-y-3 lg:top-5 max-lg:top-8 -left-6 min-w-[250px] z-50 max-h-0 overflow-hidden group-hover:opacity-100 group-hover:max-h-[700px] px-6 group-hover:pb-4 group-hover:pt-6 transition-all duration-500'>
+		                
+		                  
+		                  <li  th:each = "category: ${categories}" class='border-b py-2 '>
+		                  <a th:value="${category.id}" th:href="@{'/customer/category/view/'+${category.id}}" th:text ="${category.name}" class="hover:text-[#9c27b0] text-red-400 font-bold text-[16px] lg:hover:fill-[#9c27b0] block"></a>
+		                  </li>
+		               
+		              </ul>
+		            </li>
+                 
+				</ul>
+				
+		</header>
+			
+        
+        
+        <section class="bg-gray-50 py-8 antialiased dark:bg-gray-900 md:py-12 mt-[100px]">
+            
+        </section>
+        <div th:fragment = "script">
+	      <script>
+	        
+	      
+	      const dropdownButton = document.querySelector('.relative');
+	      const dropdownMenu = dropdownButton.querySelector('.dropdown-menu');
+	
+	      // Show dropdown on hover
+	      dropdownButton.addEventListener('mouseenter', () => {
+	        dropdownMenu.classList.remove('hidden');
+	      });
+	
+	      // Hide dropdown when mouse leaves
+	      dropdownButton.addEventListener('mouseleave', () => {
+	        dropdownMenu.classList.add('hidden');
+	      });
+	      
+	      document.addEventListener("DOMContentLoaded", function () {
+	    	    const categoryButton = document.getElementById('category-button');
+	    	    const categoryDropdown = document.getElementById('category-dropdown');
+
+	    	    // Toggle dropdown visibility on button click
+	    	    categoryButton.addEventListener('click', function() {
+	    	      // Toggle the 'hidden' class to show/hide the dropdown
+	    	      categoryDropdown.classList.toggle('hidden');
+	    	    });
+
+	    	    // Close dropdown if clicked outside
+	    	    document.addEventListener('click', function(event) {
+	    	      // Check if the click was outside the dropdown
+	    	      if (!categoryButton.contains(event.target) && !categoryDropdown.contains(event.target)) {
+	    	        categoryDropdown.classList.add('hidden');
+	    	      }
+	    	    });
+	    	  });
+	      
+	   // Initialize dropdown
+	      function initializeDropdown() {
+	        const categoryButton = document.getElementById('category-button');
+	        const categoryDropdown = document.getElementById('category-dropdown');
+
+	        categoryButton.addEventListener('click', function () {
+	          const isExpanded = categoryButton.getAttribute('aria-expanded') === 'true';
+	          categoryButton.setAttribute('aria-expanded', !isExpanded);
+	          categoryDropdown.classList.toggle('hidden', isExpanded);
+	        });
+
+	        document.addEventListener('click', function (event) {
+	          if (!categoryButton.contains(event.target) && !categoryDropdown.contains(event.target)) {
+	            categoryDropdown.classList.add('hidden');
+	            categoryButton.setAttribute('aria-expanded', 'false');
+	          }
+	        });
+	      }
+
+	      window.addEventListener('DOMContentLoaded', initializeDropdown);
+	      
+	      // invoice download pdf
+	     window.onload = function() {
+		      document.getElementById("download").addEventListener("click", () => {
+		        // Select only the invoice content (excluding the header and nav)
+		        const invoiceContent = document.getElementById("invoice-content");
+		
+		        const options = {
+		          margin: 0,  // margin in pixels
+		          filename: 'invoice.pdf',
+		          image: { type: 'jpeg', quality: 0.98 },
+		          html2canvas: { scale: 3 },
+		          jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+		        };
+		
+		        // Generate and download PDF from the selected content
+		        html2pdf().from(invoiceContent).set(options).save();
+		      });
+		    };
+	          // Print the invoice content
+	          function printInvoice() 
+	          {
+	              window.print();
+	          }
+			
+	          
+	          // increment/decrement view cart
+	            document.getElementById('decrement-button').addEventListener('click', function() {
+			        const input = document.getElementById('quantity-input');
+			        let value = parseInt(input.value) || 1; // Default to 1 if input is empty or non-numeric
+			        if (value > 1) {
+			            input.value = value - 1;
+			        }
+ 					const input_id = document.getElementById('id-input');
+			        
+			        let id = parseInt(input_id.value);
+			        
+			        const updatedQuantity = input.value;
+			        const routeUrl = '/customer/cart/update/' + updatedQuantity + '/' + id; // Modify with your actual route
+			        window.location.href = routeUrl;  
+			        
+			    });
+			
+			    document.getElementById('increment-button').addEventListener('click', function() {
+			        const input = document.getElementById('quantity-input');
+			        let value = parseInt(input.value) || 1;
+			        input.value = value + 1;
+			        
+			        const input_id = document.getElementById('id-input');
+			        
+			        let id = parseInt(input_id.value);
+			        
+			        const updatedQuantity = input.value;
+			        const routeUrl = '/customer/cart/update/' + updatedQuantity + '/' + id; // Modify with your actual route
+			        window.location.href = routeUrl;  
+			    });
+	      	
+	      </script>
+	  
+	      
+		</div>
+    </body>
+    </html>

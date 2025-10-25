@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th = "http:// www.thymeleaf.org">
+	<head th:replace = "admin/fragments :: html-header">
+	   
+	</head>
+	<body class="bg-gray-50 font-family-karla flex">
+	
+	    <aside class="relative bg-sidebar h-screen w-64 hidden sm:block shadow-xl" th:replace = "admin/fragments :: aside">
+	       
+	    </aside>
+	
+	    <div class="w-full flex flex-col h-screen overflow-y-hidden">
+	        <!-- Desktop Header -->
+	        <header class="w-full items-center bg-white py-2 px-6 hidden sm:flex" th:replace = "admin/fragments :: desktop-header" >
+	           
+	        </header>
+	    
+	        <div class="w-full h-screen overflow-x-hidden border-t flex flex-col">
+	            <main class="w-full flex-grow p-6">
+	                <h1 class="text-3xl text-black pb-6">Product</h1>
+	
+	                <div class="w-full mt-6">
+	                  
+		                	<div class="text-xl pb-3 flex items-center">
+		                        <i class="fas fa-list mr-3"></i>
+		                        <a th:href="@{/admin/product/add/form}"
+		                        	style="background-color: #452062; color: white;" 
+   									class="font-bold py-2 px-4 rounded transition hover:opacity-90">
+	  								Add Product
+								</a>
+								<form>
+								<input type = "text"  name = "search">
+								<input type = "submit" value = "Search">
+							</form>
+							 </div>
+							
+	                  
+	                    <div class="bg-white overflow-auto">
+	                        <table class="min-w-full leading-normal">
+	                             <thead>
+                                <tr>
+                                    <th
+                                        class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                        Image
+                                    </th>
+                                    <th
+                                        class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                      Name
+                                    </th>
+                                    <th
+                                        class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                       Description
+                                    </th>
+                                     <th
+                                        class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                       Category
+                                    </th>
+                                    <th
+                                        class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                       Quantity
+                                    </th>
+                                    <th
+                                        class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                        Price
+                                    </th>
+                                    <th
+                                        class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                       Created at
+                                    </th>
+                                     <th
+                                        class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                        Action
+                                    </th>
+                                     <th
+                                        class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                        Action
+                                    </th>
+                                </tr>
+                            </thead>
+	                            <tbody class="text-gray-700">
+	                               <tr th:each = "product : ${products}">
+                                    <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                        <div class="flex items-center">
+                                            <div class="flex-shrink-0 w-10 h-10">
+                                                <img class="w-full h-full rounded-full"
+                                                    th:src = "@{${'/Upload/' + product.image}}"
+                                                    alt="" />
+                                            </div>
+                                            
+                                        </div>
+                                    </td>
+                                    <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                        <p class="text-gray-900 whitespace-no-wrap" th:text = "${product.name}"></p>
+                                    </td>
+                                    <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                        <p class="text-gray-900 whitespace-no-wrap" th:text = "${product.description}">
+                                         
+                                        </p>
+                                    </td>
+                                    <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                        <p class="text-gray-900 whitespace-no-wrap" th:text="${product?.category?.name != null ? product.category.name : 'No category available'}"></p>
+                                   		
+                                    </td>
+                                     <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                        <p class="text-gray-900 whitespace-no-wrap" th:text = "${product.quantity}">
+                                         
+                                        </p>
+                                    </td>
+                                     <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                        <p class="text-gray-900 whitespace-no-wrap" th:text = "${product.price}">
+                                        
+                                        </p>
+                                    </td>
+                                    <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                        <p class="text-gray-900 whitespace-no-wrap"
+										   th:text="${#dates.format(product.createdDate, 'yyyy-MM-dd')}">
+										</p>
+
+
+                                     <td class="text-left py-3 px-4"><a class="hover:text-blue-500" th:href = "@{'/admin/product/edit/'+${product.id}}">Edit</a></td>
+	                                 <td class="text-left py-3 px-4">
+	                                 	<a class="hover:text-blue-500" th:href="@{'/admin/product/delete/'+${product.id}}" onclick = "return confirm('Are you sure you want to delete?')">Delete</a> 
+	                                 	
+	                                 </td>
+                                </tr>
+	                               
+	                            </tbody>
+	                        </table>
+	                    </div>
+	                    
+	                </div>          
+	
+	                <div th:if="${successMessage}" 
+					     class="alert-success text-green-600 bg-green-100 px-4 py-2 rounded mt-4">
+					    <span th:text="${successMessage}"></span>
+					</div>
+	            </main>
+	    
+	            <footer class="w-full bg-white text-right p-4" th:replace = "admin/fragments :: footer">
+	               
+	            </footer>
+	        </div>
+	        
+	    </div>
+	
+		<div th:replace = "admin/fragments :: script"></div>
+		
+	</body>
+</html>

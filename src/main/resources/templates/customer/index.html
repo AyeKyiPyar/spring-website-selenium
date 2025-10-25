@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th = "http://www.thymeleaf.org">
+  <head th:replace = "customer/fragments :: html_head">
+   
+  </head>
+	<body class="bg-gray-100">
+        
+        <header th:replace  = "customer/fragments :: header" class='fixed top-0 left-0 w-full z-50 border-b bg-white font-sans min-h-[60px] px-10 py-3'>
+            
+        </header>
+		<header th:replace = "customer/fragments :: nav" class='fixed top-[77px] left-0 w-full z-50 border-b bg-red-200 font-sans min-h-[60px] px-10 py-3'>
+		</header>
+		
+        <section class="bg-gray-50 py-8 antialiased dark:bg-gray-900 md:py-12 mt-[70px]">
+            <div class="mx-auto max-w-screen-xl px-4 2xl:px-0">
+              <!-- Heading & Filters -->
+              <div class="mb-4 items-end justify-between space-y-4 sm:flex sm:space-y-0 md:mb-8">
+                <div>
+                  <nav class="flex" aria-label="Breadcrumb">
+                    <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
+                      <li class="inline-flex items-center">
+                        <a href="#" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-primary-600 dark:text-gray-400 dark:hover:text-white">
+                          <svg class="me-2.5 h-3 w-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z" />
+                          </svg>
+                          Home
+                        </a>
+                      </li>
+                      <li>
+                        <div class="flex items-center">
+                          <svg class="h-5 w-5 text-gray-400 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 5 7 7-7 7" />
+                          </svg>
+                          <a href="#" class="ms-1 text-sm font-medium text-gray-700 hover:text-primary-600 dark:text-gray-400 dark:hover:text-white md:ms-2">Products</a>
+                        </div>
+                      </li>
+                      <li aria-current="page">
+                        <div class="flex items-center">
+                          <svg class="h-5 w-5 text-gray-400 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 5 7 7-7 7" />
+                          </svg>
+                          <span class="ms-1 text-sm font-medium text-gray-500 dark:text-gray-400 md:ms-2"></span>
+                        </div>
+                      </li>
+                    </ol>
+                  </nav>
+                  <h2 class="mt-3 text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl">Products</h2>
+                </div>
+                
+              </div>
+              <!-- Product Cards -->
+              
+	              <div class="mb-4 grid gap-4 sm:grid-cols-2 md:mb-8 lg:grid-cols-3 xl:grid-cols-4" >
+	                <div th:each = "product : ${products}" class="product-card rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+	                  <div id="product-card" class="h-56 w-full">
+	                    <a href="#">
+	                      <img class="mx-auto h-full dark:hidden" th:src="@{'/Upload/'+${product.image}}" alt="" />
+	                      
+	                    </a>
+	                  </div>
+	                  <div class="pt-6">
+	                    
+	                    <a href="#" class="text-lg font-semibold leading-tight text-gray-900 hover:underline dark:text-white" th:text = "${product.name}"></a>
+	                    <div class="mt-4 flex items-center justify-between gap-4">
+	                      <p class="text-2xl font-extrabold leading-tight text-gray-900 dark:text-white" th:text = "${product.price}+'$'"></p>
+	          			
+	                      <a th:href = "@{'/customer/cart/add/'+${product.id}}" class="inline-flex items-center rounded-lg bg-[#970747] px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4  focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+	                        <svg class="-ms-2 me-2 h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+	                          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4h1.5L8 16m0 0h8m-8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm.75-3H7.5M11 7H6.312M17 4v6m-3-3h6" />
+	                        </svg>
+	                        Add to cart
+	                      </a>
+	                    </div>
+	                  </div>
+	                </div>
+	               
+	              </div>
+	             
+              <div class="w-full text-center">
+                <button type="button" class="rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700">Show more</button>
+              </div>
+            </div>
+			
+        </section>
+      	
+      	
+      	<div th:replace = "customer/fragments :: script"></div>
+		<script>
+	        
+	      
+	      const dropdownButton = document.querySelector('.relative');
+	      const dropdownMenu = dropdownButton.querySelector('.dropdown-menu');
+	
+	      // Show dropdown on hover
+	      dropdownButton.addEventListener('mouseenter', () => {
+	        dropdownMenu.classList.remove('hidden');
+	      });
+	
+	      // Hide dropdown when mouse leaves
+	      dropdownButton.addEventListener('mouseleave', () => {
+	        dropdownMenu.classList.add('hidden');
+	      });
+	      
+	      document.addEventListener("DOMContentLoaded", function () {
+	    	    const categoryButton = document.getElementById('category-button');
+	    	    const categoryDropdown = document.getElementById('category-dropdown');
+
+	    	    // Toggle dropdown visibility on button click
+	    	    categoryButton.addEventListener('click', function() {
+	    	      // Toggle the 'hidden' class to show/hide the dropdown
+	    	      categoryDropdown.classList.toggle('hidden');
+	    	    });
+
+	    	    // Close dropdown if clicked outside
+	    	    document.addEventListener('click', function(event) {
+	    	      // Check if the click was outside the dropdown
+	    	      if (!categoryButton.contains(event.target) && !categoryDropdown.contains(event.target)) {
+	    	        categoryDropdown.classList.add('hidden');
+	    	      }
+	    	    });
+	    	  });
+	      
+	   // Initialize dropdown
+	      function initializeDropdown() {
+	        const categoryButton = document.getElementById('category-button');
+	        const categoryDropdown = document.getElementById('category-dropdown');
+
+	        categoryButton.addEventListener('click', function () {
+	          const isExpanded = categoryButton.getAttribute('aria-expanded') === 'true';
+	          categoryButton.setAttribute('aria-expanded', !isExpanded);
+	          categoryDropdown.classList.toggle('hidden', isExpanded);
+	        });
+
+	        document.addEventListener('click', function (event) {
+	          if (!categoryButton.contains(event.target) && !categoryDropdown.contains(event.target)) {
+	            categoryDropdown.classList.add('hidden');
+	            categoryButton.setAttribute('aria-expanded', 'false');
+	          }
+	        });
+	      }
+
+	      window.addEventListener('DOMContentLoaded', initializeDropdown);
+	      
+	      // invoice download pdf
+	      window.onload = function()
+	      {
+	  		document.getElementById("download").addEventListener("click",()=>{
+	  			const invoice = this.document.getElementById("invoice-content");
+	  			console.log(invoice);
+	  			console.log(window);
+	  			var element = document.getElementById('element-to-print');
+	  			var opt = {
+	  			
+	  			  margin:       0,
+	  			  filename:     'receipt.pdf',
+	  			  image:        { type: 'jpeg', quality: 0.98 },
+	  			  html2canvas:  { scale: 3 },
+	  			  jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+	  			};
+	  			html2pdf().from(invoice).set(opt).save();
+	  			})
+	  			}
+	          // Print the invoice content
+	          function printInvoice() 
+	          {
+	              window.print();
+	          }
+
+	      	
+	      </script>
+    </body>
+    </html>
