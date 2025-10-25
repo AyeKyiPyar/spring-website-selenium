@@ -4,7 +4,7 @@ pipeline {
     environment {
         REPO_URL = 'https://github.com/AyeKyiPyar/spring-website-selenium.git'
         DOCKER_COMPOSE_FILE = 'docker-compose.yml'
-        APP_CONTAINER = spring-website-selenium-app'
+        APP_CONTAINER = 'spring-website-selenium-app'
         APP_JAR = 'target/Spring-chpt-01-Ex-0.0.1-SNAPSHOT.jar'
     }
 
