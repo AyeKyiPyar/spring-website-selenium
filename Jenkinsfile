@@ -23,44 +23,49 @@ pipeline {
             }
         }
 
-        stage('Start App Container') {
+       stage('Start App Container') {
 		    steps {
 		        echo '⚙️ Ensuring MySQL container is running...'
 		        bat '''
-		            REM Check if mysql_db container exists
+		            REM --- Check MySQL container ---
 		            docker ps -a --format "{{.Names}}" | findstr /C:"mysql_db" >nul
 		            if %errorlevel%==0 (
-		                REM Container exists, check if running
 		                docker inspect -f "{{.State.Running}}" mysql_db | findstr /C:"true" >nul
 		                if %errorlevel%==0 (
-		                    echo ▶️ MySQL container is already running
+		                    echo ▶️ MySQL container already running
 		                ) else (
 		                    echo ▶️ Starting existing MySQL container...
 		                    docker start mysql_db
 		                )
 		            ) else (
-		                REM Container does not exist, create and run
-		                echo 🆕 Creating and starting MySQL container...
+		                echo 🆕 Creating MySQL container...
 		                docker run -d --name mysql_db --network akpsnetwork -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=springonetomany -p 3306:3306 mysql:latest
 		            )
 		        '''
 		
-		        echo '⚙️ Starting Spring Boot container...'
+		        echo '⚙️ Ensuring Spring Boot container is running...'
 		        bat '''
-		            REM Stop existing Spring Boot container if running
-		            docker ps -a --format "{{.Names}}" | findstr /C:"%APP_CONTAINER%" >nul
+		            REM --- Check Spring Boot container ---
+		            docker ps -a --format "{{.Names}}" | findstr /C:"spring-website-selenium-app" >nul
 		            if %errorlevel%==0 (
-		                echo ▶️ Stopping existing container...
-		                docker stop %APP_CONTAINER%
-		                docker rm %APP_CONTAINER%
+		                REM Container exists, check if running
+		                docker inspect -f "{{.State.Running}}" spring-website-selenium-app | findstr /C:"true" >nul
+		                if %errorlevel%==0 (
+		                    echo ▶️ Spring Boot container already running
+		                ) else (
+		                    echo ▶️ Starting existing Spring Boot container...
+		                    docker start spring-website-selenium-app
+		                )
+		            ) else (
+		                REM Container does not exist, run new
+		                echo 🆕 Creating Spring Boot container...
+		                docker run -d --name spring-website-selenium-app --network akpsnetwork -p 7075:8080 spring-website-selenium:latest
 		            )
-		            REM Start Spring Boot container
-		            docker run -d --name %APP_CONTAINER% --network akpsnetwork -p %APP_PORT%:8080 %APP_IMAGE%
 		        '''
-		        
-		        bat 'powershell -Command "Start-Sleep -Seconds 20"' // wait for container to initialize
+		        bat 'powershell -Command "Start-Sleep -Seconds 20"'
 		    }
 		}
+
 
         stage('Run Selenium Tests') {
             steps {
