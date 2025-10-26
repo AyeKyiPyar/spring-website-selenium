@@ -41,7 +41,7 @@ public class CategorySeleniumTest
     void testAddCategory() throws InterruptedException 
     {
         // Open the category form page
-        driver.get("http://localhost:8080/admin/category/add/form"); // replace with your actual URL
+        driver.get("http://localhost:7075/admin/category/add/form"); // replace with your actual URL
 
         // Wait until the form fields are visible
         WebElement nameInput = wait.until(
