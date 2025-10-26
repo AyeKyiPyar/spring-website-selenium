@@ -24,14 +24,42 @@ pipeline {
             }
         }
 
-        stage('Start Test Environment') {
+        /*stage('Start Test Environment') {
             steps {
                 echo '⚙️ Starting MySQL container for Selenium tests...'
                 bat "docker-compose -f ${DOCKER_COMPOSE_FILE} down"
                 bat "docker-compose -f ${DOCKER_COMPOSE_FILE} up -d mysql_db"
                 bat 'powershell -Command "Start-Sleep -Seconds 10"' // wait for MySQL
             }
-        }
+        }*/
+        /*stage('Start Test Environment') {
+		    steps {
+		        echo '🛑 Stopping existing MySQL container if running...'
+		        bat 'docker stop mysql_db || echo "No running mysql_db container to stop"'
+		        
+		        echo '▶️ Starting existing MySQL container for Selenium tests...'
+		        bat 'docker start mysql_db || docker-compose -f docker-compose.yml up -d mysql_db'
+		    }
+		}*/
+		stage('Start Test Environment') {
+		    steps {
+		        echo '🛑 Stopping existing MySQL container if running...'
+		        bat 'docker stop mysql_db || echo "No running mysql_db container to stop"'
+		        
+		        echo '⚙️ Checking MySQL container status...'
+		        bat '''
+		            docker ps -a --format "{{.Names}}" | findstr /C:"mysql_db" >nul
+		            if %errorlevel%==0 (
+		                echo ▶️ Starting existing MySQL container...
+		                docker start mysql_db
+		            ) else (
+		                echo 🆕 Creating and starting new MySQL container...
+		                docker-compose -f docker-compose.yml up -d mysql_db
+		            )
+		        '''
+		    }
+		}
+
 
         stage('Run Selenium Tests') {
             steps {
