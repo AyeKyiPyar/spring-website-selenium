@@ -24,7 +24,7 @@ public class AdminSeleniumTest
     @BeforeAll
     void setUp() 
     {
-        System.setProperty("webdriver.chrome.driver", "C:\\drivers\\chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver", System.getenv("CHROME_DRIVER_PATH"));
         driver = new ChromeDriver();
         wait = new WebDriverWait(driver, Duration.ofSeconds(10)); // increased wait to handle loader
         driver.manage().window().maximize();
@@ -34,7 +34,7 @@ public class AdminSeleniumTest
     void testAdminLoginSuccess() 
     {
         // 1️. Open login page
-        driver.get("http://localhost:8080/admin");
+        driver.get("http://localhost:7075/admin");
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("myDiv")));
         
 ////        // 2. Fill login form
