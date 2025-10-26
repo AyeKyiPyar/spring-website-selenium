@@ -2,10 +2,9 @@ pipeline {
     agent any
 
     environment {
-        REPO_URL = 'https://github.com/AyeKyiPyar/spring-website-selenium.git'
-        DOCKER_COMPOSE_FILE = 'docker-compose.yml'
+        APP_IMAGE = 'spring-website-selenium:latest'
         APP_CONTAINER = 'spring-website-selenium-app'
-        APP_JAR = 'target/Spring-chpt-01-Ex-0.0.1-SNAPSHOT.jar'
+        APP_PORT = '7075'
     }
 
     stages {
@@ -13,7 +12,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 echo '📦 Cloning repository...'
-                git branch: 'main', url: "${REPO_URL}"
+                git branch: 'main', url: 'https://github.com/AyeKyiPyar/spring-website-selenium.git'
             }
         }
 
@@ -24,19 +23,48 @@ pipeline {
             }
         }
 
-        
-        stage('Build & Deploy App') {
-            steps {
-                echo '🚀 Deploying Spring Boot app with MySQL using Docker Compose...'
-                bat "docker-compose -f ${DOCKER_COMPOSE_FILE} down"
-                bat "docker-compose -f ${DOCKER_COMPOSE_FILE} up -d --build"
-                bat 'powershell -Command "Start-Sleep -Seconds 20"' // wait for services
-            }
-        }
-		 stage('Run Selenium Tests') {
+        stage('Start App Container') {
+		    steps {
+		        echo '⚙️ Ensuring MySQL container is running...'
+		        bat '''
+		            REM Check if mysql_db container exists
+		            docker ps -a --format "{{.Names}}" | findstr /C:"mysql_db" >nul
+		            if %errorlevel%==0 (
+		                REM Container exists, check if running
+		                docker inspect -f "{{.State.Running}}" mysql_db | findstr /C:"true" >nul
+		                if %errorlevel%==0 (
+		                    echo ▶️ MySQL container is already running
+		                ) else (
+		                    echo ▶️ Starting existing MySQL container...
+		                    docker start mysql_db
+		                )
+		            ) else (
+		                REM Container does not exist, create and run
+		                echo 🆕 Creating and starting MySQL container...
+		                docker run -d --name mysql_db --network akpsnetwork -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=springonetomany -p 3306:3306 mysql:latest
+		            )
+		        '''
+		
+		        echo '⚙️ Starting Spring Boot container...'
+		        bat '''
+		            REM Stop existing Spring Boot container if running
+		            docker ps -a --format "{{.Names}}" | findstr /C:"%APP_CONTAINER%" >nul
+		            if %errorlevel%==0 (
+		                echo ▶️ Stopping existing container...
+		                docker stop %APP_CONTAINER%
+		                docker rm %APP_CONTAINER%
+		            )
+		            REM Start Spring Boot container
+		            docker run -d --name %APP_CONTAINER% --network akpsnetwork -p %APP_PORT%:8080 %APP_IMAGE%
+		        '''
+		        
+		        bat 'powershell -Command "Start-Sleep -Seconds 20"' // wait for container to initialize
+		    }
+		}
+
+        stage('Run Selenium Tests') {
             steps {
                 echo '🧪 Running Selenium UI tests...'
-                // Selenium tests connect to the running app at http://localhost:8080
                 bat 'mvn test -Pselenium-tests'
             }
         }
@@ -48,7 +76,7 @@ pipeline {
             bat 'docker ps -a'
         }
         success {
-            echo "🎉 Pipeline succeeded! App running at http://localhost:7074/"
+            echo "🎉 Pipeline succeeded! App running at http://localhost:%APP_PORT%/"
         }
         failure {
             echo '❌ Pipeline failed. Check logs above.'
