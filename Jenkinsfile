@@ -64,6 +64,35 @@ pipeline {
 		}
 
 
+	stage('Wait for App to be Ready') {
+		    steps {
+		        echo '⏳ Waiting for Spring Boot app to become available...'
+		        bat '''
+		            setlocal enabledelayedexpansion
+		            set RETRIES=30
+		            set COUNT=0
+		            :waitloop
+		            powershell -Command "(Invoke-WebRequest -Uri http://localhost:7075/actuator/health -UseBasicParsing).StatusCode" > tmp.txt 2>nul
+		            for /f %%i in (tmp.txt) do set CODE=%%i
+		            if "!CODE!"=="200" (
+		                echo ✅ App is healthy and ready!
+		                goto :done
+		            ) else (
+		                set /a COUNT+=1
+		                echo ⏳ Waiting for app... (attempt !COUNT!/!RETRIES!)
+		                if !COUNT! GEQ !RETRIES! (
+		                    echo ❌ App failed to start after !RETRIES! attempts
+		                    exit /b 1
+		                )
+		                timeout /t 5 >nul
+		                goto :waitloop
+		            )
+		            :done
+		            del tmp.txt >nul 2>&1
+		            exit /b 0
+		        '''
+		    }
+		}
 
        stage('Run Selenium Tests') {
 		    steps {
