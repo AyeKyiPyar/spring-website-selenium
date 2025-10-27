@@ -27,7 +27,6 @@ pipeline {
 		    steps {
 		        echo '⚙️ Ensuring MySQL container is running...'
 		        bat '''
-		            REM --- Check MySQL container ---
 		            docker ps -a --format "{{.Names}}" | findstr /C:"mysql_db" >nul
 		            if %errorlevel%==0 (
 		                docker inspect -f "{{.State.Running}}" mysql_db | findstr /C:"true" >nul
@@ -35,36 +34,35 @@ pipeline {
 		                    echo ▶️ MySQL container already running
 		                ) else (
 		                    echo ▶️ Starting existing MySQL container...
-		                    docker start mysql_db
+		                    docker start mysql_db >nul
 		                )
 		            ) else (
-		                echo 🆕 Creating MySQL container...
-		                docker run -d --name mysql_db --network akpsnetwork -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=springonetomany -p 3306:3306 mysql:latest
+		                echo 🆕 Creating and starting MySQL container...
+		                docker run -d --name mysql_db --network akpsnetwork -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=springonetomany -p 3306:3306 mysql:latest >nul
 		            )
 		        '''
 		
 		        echo '⚙️ Ensuring Spring Boot container is running...'
 		        bat '''
-		            REM --- Check Spring Boot container ---
 		            docker ps -a --format "{{.Names}}" | findstr /C:"spring-website-selenium-app" >nul
 		            if %errorlevel%==0 (
-		                REM Container exists, check if running
 		                docker inspect -f "{{.State.Running}}" spring-website-selenium-app | findstr /C:"true" >nul
 		                if %errorlevel%==0 (
 		                    echo ▶️ Spring Boot container already running
 		                ) else (
 		                    echo ▶️ Starting existing Spring Boot container...
-		                    docker start spring-website-selenium-app
+		                    docker start spring-website-selenium-app >nul
 		                )
 		            ) else (
-		                REM Container does not exist, run new
 		                echo 🆕 Creating Spring Boot container...
-		                docker run -d --name spring-website-selenium-app --network akpsnetwork -p 7075:8080 spring-website-selenium:latest
+		                docker run -d --name spring-website-selenium-app --network akpsnetwork -p 7075:8080 spring-website-selenium:latest >nul
 		            )
+		            exit /b 0
 		        '''
 		        bat 'powershell -Command "Start-Sleep -Seconds 20"'
 		    }
 		}
+
 
 
        stage('Run Selenium Tests') {
