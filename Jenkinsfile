@@ -69,32 +69,11 @@ pipeline {
 
        stage('Run Selenium Tests') {
 		    steps {
-		        echo '🧪 Checking if containers are running before executing Selenium tests...'
-		        bat '''
-		            setlocal enabledelayedexpansion
-		            set MYSQL_STATUS=stopped
-		            set APP_STATUS=stopped
-		
-		            REM Check MySQL container
-		            docker inspect -f "{{.State.Running}}" mysql_db 2>nul | findstr /C:"true" >nul
-		            if %errorlevel%==0 set MYSQL_STATUS=running
-		
-		            REM Check Spring Boot container
-		            docker inspect -f "{{.State.Running}}" spring-website-selenium-app 2>nul | findstr /C:"true" >nul
-		            if %errorlevel%==0 set APP_STATUS=running
-		
-		            echo MySQL: !MYSQL_STATUS! , App: !APP_STATUS!
-		
-		            if /I "!MYSQL_STATUS!"=="running" if /I "!APP_STATUS!"=="running" (
-		                echo ✅ Both containers running — starting Selenium tests...
-		                mvn test -Dtest=SeleniumTest
-		            ) else (
-		                echo ❌ One or more containers are not running. Skipping Selenium tests.
-		                exit /b 1
-		            )
-		        '''
+		        echo '🧪 Running Selenium UI tests...'
+		        bat 'mvn test -Pselenium-tests'
 		    }
 		}
+
     }
 
     post {
